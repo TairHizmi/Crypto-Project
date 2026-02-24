@@ -18,7 +18,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 interface Prices {
   [symbol: string]: {
-    usd: number;
+    USD: number;
   };
 }
 
@@ -64,7 +64,7 @@ export default function RealtimePage() {
       const symbol = coin.symbol.toUpperCase();
       return {
         label: symbol,
-        data: history.map((h) => h.prices[symbol]?.usd ?? null),
+        data: history.map((h) => h.prices[symbol]?.USD ?? null),
         borderColor: colorList[idx % colorList.length],
         backgroundColor: colorList[idx % colorList.length],
         fill: false,

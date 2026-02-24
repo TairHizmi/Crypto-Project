@@ -35,10 +35,16 @@ export default function AIPage() {
         body: JSON.stringify({
           model: 'gpt-4o-mini',
           messages: [
-            { role: 'system', content: 'You provide buy/not buy with explanation.' },
-            { role: 'user', content: prompt },
+            {
+              role: 'system',
+              content: 'You are an expert crypto financial advisor. Analyze the data provided and give a professional recommendation. Start your response with exactly "BUY", "NOT BUY", or "HOLD" as the first line, followed by a detailed explanation paragraph.'
+            },
+            {
+              role: 'user',
+              content: `Analyze this coin data and provide a recommendation:\n${prompt}`
+            },
           ],
-          max_tokens: 300,
+          max_tokens: 400,
         }),
       });
       const chatData = await chatResp.json();
