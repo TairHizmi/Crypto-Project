@@ -19,9 +19,10 @@ export default function HomePage() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1')
+    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&x_cg_demo_api_key=${import.meta.env.VITE_COINGECKO_KEY}`;
+    fetch(url)
       .then((r) => {
-        if (!r.ok) throw new Error('API Rate limit reached. Please wait a minute and refresh.');
+        if (!r.ok) throw new Error(`API Error: ${r.status}. Please wait a minute and refresh.`);
         return r.json();
       })
       .then((data) => {
