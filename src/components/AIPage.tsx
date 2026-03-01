@@ -62,24 +62,55 @@ export default function AIPage() {
     }
   };
 
+  const hideRecommendation = (id: string) => {
+    setResult((prev) => {
+      const newResult = { ...prev };
+      delete newResult[id];
+      return newResult;
+    });
+  };
+
   return (
     <div className="page ai-page">
       <h2>AI Recommendations</h2>
-      {selected.length === 0 && <div>No coins to provide recommendations for</div>}
-      {selected.map((coin) => (
-        <div key={coin.id} className="ai-coin">
-          <span style={{ fontWeight: 'bold', marginRight: '10px' }}>{coin.id.toUpperCase()} ({coin.symbol.toUpperCase()})</span>
-          <button onClick={() => getRecommendation(coin.id)} disabled={loadingId === coin.id}>
-            {loadingId === coin.id ? 'Loading...' : 'Get recommendation'}
-          </button>
-          {result[coin.id] && (
-            <div className="ai-result">
-              <strong style={{ display: 'block', marginBottom: '5px', color: '#2c3e50' }}>{result[coin.id].decision}</strong>
-              <p>{result[coin.id].explanation}</p>
+      {selected.length === 0 && <div className="no-coins-msg">No coins selected for AI recommendations. Please go to Home and select some coins.</div>}
+      <div className="ai-coins-grid">
+        {selected.map((coin) => (
+          <div key={coin.id} className="ai-coin-card">
+            <div className="ai-coin-header">
+              <span className="coin-title">{coin.id.toUpperCase()} ({coin.symbol.toUpperCase()})</span>
+              <div className="ai-actions">
+                <button
+                  className="btn-get-rec"
+                  onClick={() => getRecommendation(coin.id)}
+                  disabled={loadingId === coin.id}
+                >
+                  {loadingId === coin.id ? (
+                    <span className="loading-dots">Thinking</span>
+                  ) : (
+                    'Get recommendation'
+                  )}
+                </button>
+                {result[coin.id] && (
+                  <button className="btn-hide-rec" onClick={() => hideRecommendation(coin.id)}>
+                    Hide
+                  </button>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-      ))}
+            {result[coin.id] && (
+              <div className="ai-result-box">
+                <div className={`recommendation-badge ${result[coin.id].decision.toLowerCase().replace(' ', '-')}`}>
+                  {result[coin.id].decision}
+                </div>
+                <div className="explanation-text">
+                  {result[coin.id].explanation}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
