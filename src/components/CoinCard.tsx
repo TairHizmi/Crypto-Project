@@ -39,17 +39,22 @@ export default function CoinCard({ coin }: Props) {
       <img src={coin.image} alt={coin.name} className="coin-icon" />
       <div className="coin-symbol">{coin.symbol.toUpperCase()}</div>
       <div className="coin-name">{coin.name}</div>
-      <button onClick={() => setShowInfo((s) => !s)} className="info-btn">More Info</button>
+      <button
+        onClick={() => setShowInfo((s) => !s)}
+        className={`info-btn ${showInfo ? 'active' : ''}`}
+      >
+        {showInfo ? 'Close Info' : 'More Info'}
+      </button>
       <label className="switch">
         <input type="checkbox" checked={isSelected} onChange={handleSwitch} />
         <span className="slider" />
       </label>
-      {showInfo && <CoinInfo id={coin.id} />}
+      {showInfo && <CoinInfo id={coin.id} onClose={() => setShowInfo(false)} />}
     </div>
   );
 }
 
-function CoinInfo({ id }: { id: string }) {
+function CoinInfo({ id, onClose }: { id: string; onClose: () => void }) {
   const [info, setInfo] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -61,7 +66,7 @@ function CoinInfo({ id }: { id: string }) {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div>Loading info...</div>;
+  if (loading) return <div className="info-loading">Loading info...</div>;
   if (!info) return null;
 
   return (
@@ -78,6 +83,7 @@ function CoinInfo({ id }: { id: string }) {
         <span className="info-label">ILS:</span>
         <span className="info-value">₪{info.current_price.ils.toLocaleString()}</span>
       </div>
+      <button onClick={onClose} className="btn-close-mini">Close</button>
     </div>
   );
 }
